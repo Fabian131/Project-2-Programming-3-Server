@@ -1,7 +1,5 @@
 package business;
-	
-import data.OperatorData;
-import domain.Operator;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -18,8 +16,8 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
-			Operator opera = new Operator("Juarez Bonaparte", "Chavo"); 
-			OperatorData.saveOperator(opera);
+			//Operator opera = new Operator("Juarez Bonaparte", "Chavo"); 
+		//	OperatorData.saveOperator(opera);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
