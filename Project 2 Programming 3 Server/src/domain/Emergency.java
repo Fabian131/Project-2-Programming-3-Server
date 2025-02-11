@@ -8,8 +8,9 @@ public class Emergency {
 	private String ubication; 
 	private String description;
 	
+	public Emergency() {}
+	
 	public Emergency(String idUser, String typeEmergency, String ubication, String description) {
-		super();
 		this.id = 0; 
 		this.idUser = idUser;
 		this.typeEmergency = typeEmergency;

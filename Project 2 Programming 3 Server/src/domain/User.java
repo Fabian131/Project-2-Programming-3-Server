@@ -7,16 +7,17 @@ public class User {
 	private String surnames; 
 	private String name;
 	private String password; 
+	private String imagePath; //para la ruta de la imagen
 	
 	public User() {}
 	
-	public User(String identification, String surnames, String name, String password) {
-		super();
+	public User(String identification, String surnames, String name, String password, String imagePath) {
 		this.id = 0;
 		this.identification = identification; 
 		this.surnames = surnames;
 		this.name = name;
 		this.password = password; 
+		this.imagePath = imagePath; 
 	}
 
 	public int getId() {
@@ -57,6 +58,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	@Override

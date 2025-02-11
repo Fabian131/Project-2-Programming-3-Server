@@ -6,29 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import domain.User;
+import domain.Operator;
 
-public class UserData {
+public class OperatorData {
 	
 
-	public static LinkedList<User> getAll(){
+	public static LinkedList<Operator> getAll(){
 		
-		LinkedList<User> list = new LinkedList<User>(); 
+		LinkedList<Operator> list = new LinkedList<Operator>(); 
 		
 		try {
 			Connection cn = DBConnection.getConnection(); 
-			String query = "{call getAllClient}"; 
+			String query = "{call getAllOperator}"; 
 			CallableStatement stmt = cn.prepareCall(query); 
 			ResultSet rs = stmt.executeQuery(); 
 			
 			while(rs.next()) {
-				User c = new User(); 
+				Operator c = new Operator(); 
 				c.setId(rs.getInt(1));
-				c.setIdentification(rs.getString(2));
-				c.setSurnames(rs.getString(3));
-				c.setName(rs.getString(4));
-				c.setPassword(rs.getString(5));
-				c.setImagePath(rs.getString(6));
+				c.setSurnames(rs.getString(2));
+				c.setName(rs.getString(3));
 				
 				list.add(c); 
 			
@@ -42,17 +39,14 @@ public class UserData {
 		return list; 
 	}
 	
-	public static void saveUser(User user) {
+	public static void saveOperator(Operator opera) {
 		
 		try {
 			Connection cn = DBConnection.getConnection(); 
-			String query = "{call saveClient(?,?,?,?,?)}"; //cada signo es un parametro
+			String query = "{call saveOperator(?,?)}"; //cada signo es un parametro
 			CallableStatement stmt = cn.prepareCall(query); 
-			stmt.setString(1, user.getIdentification());
-			stmt.setString(2, user.getSurnames());
-			stmt.setString(3, user.getName());
-			stmt.setString(4, user.getPassword());
-			stmt.setString(5, user.getImagePath());
+			stmt.setString(1, opera.getSurnames());
+			stmt.setString(2, opera.getName());
 			
 			stmt.executeQuery(); 
 			
@@ -63,5 +57,4 @@ public class UserData {
 		}
 	}
 	
-
 }
