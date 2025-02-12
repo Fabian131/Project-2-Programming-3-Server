@@ -1,5 +1,10 @@
 package business;
 
+import java.sql.Connection;
+
+import data.DBConnection;
+import data.OperatorData;
+import domain.Operator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +30,12 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
-		
+//		Connection connection = DBConnection.getConnection();
+//		for (Operator o : OperatorData.getAll()) {
+//			System.out.println(o.toString());
+//		}
+//		System.out.println("validar cedula "+OperatorData.checkIdentification("123"));
+//		System.out.println("validar login: "+OperatorData.validateLoginOperator("12334","Fabian1234+"));
 		launch(args);
 	}
 }
