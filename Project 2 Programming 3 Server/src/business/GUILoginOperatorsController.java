@@ -35,9 +35,9 @@ public class GUILoginOperatorsController {
 	@FXML
 	public void goToCreateAccount(ActionEvent event) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/presentation/GUIRegistration.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/presentation/GUIRegistrationOperators.fxml"));
 			Parent root = loader.load();//cargar la escena
-			GUIRegistrationController controller = loader.getController();//cargar el controlador que esta asociado a la vista
+			GUIRegistrationOperatorsController controller = loader.getController();//cargar el controlador que esta asociado a la vista
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
 			stage.setScene(scene);
