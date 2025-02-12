@@ -12,7 +12,7 @@ public class DBConnection {
 	private final static String host = "localhost"; 
 	//Puerto Abi: 3306, Puerto Fabian: 9999
 	//Cambiar cada vez que trate de levantar
-	private final static int port = 3306;
+	private final static int port = 9999;
 	private final static String url = "jdbc:mysql://" + host + ":" + port + "/" + database; 
 	
 	private static Connection con; 

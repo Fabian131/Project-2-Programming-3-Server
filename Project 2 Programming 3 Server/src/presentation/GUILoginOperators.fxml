@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="384.0" style="-fx-background-color: linear-gradient(to right, #FF0000, #FF8C00, #000428); -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="business.GUILoginOperatorsController">
+   <children>
+      <AnchorPane layoutX="-4.0" layoutY="204.0" prefHeight="346.0" prefWidth="392.0" style="-fx-background-radius: 30; -fx-border-radius: 30; -fx-background-color: white;">
+         <children>
+            <Label layoutX="35.0" layoutY="53.0" text="Inicia Sesión" textFill="#e45832">
+               <font>
+                  <Font name="Berlin Sans FB" size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfIdentificationStart" focusTraversable="false" layoutX="35.0" layoutY="94.0" prefHeight="25.0" prefWidth="256.0" promptText="Ingresa tu identificación" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: linear-gradient(to right, #FF0000, #FF8C00, #000428)linear-gradient(to right, #FF0000, #FF8C00, #000428);" />
+            <TextField fx:id="tfPasswordStart" focusTraversable="false" layoutX="35.0" layoutY="146.0" prefHeight="25.0" prefWidth="256.0" promptText="Ingresa tu contraseña" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: linear-gradient(to right, #FF0000, #FF8C00, #000428)linear-gradient(to right, #FF0000, #FF8C00, #000428);" />
+            <Button fx:id="btnGo" layoutX="144.0" layoutY="197.0" mnemonicParsing="false" onAction="#goToStart" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-background-color: linear-gradient(to right, #FF0000, #FF8C00, #000428);" text="INGRESAR" textFill="#f5f0f0">
+               <font>
+                  <Font name="Berlin Sans FB" size="18.0" />
+               </font>
+            </Button>
+            <Label fx:id="lMessageErrorPassword" layoutX="45.0" layoutY="173.0" prefHeight="17.0" prefWidth="142.0" />
+            <Label layoutX="35.0" layoutY="263.0" text="No tienes cuenta? " />
+            <Button fx:id="btnCreateAccount" layoutX="27.0" layoutY="280.0" mnemonicParsing="false" onAction="#goToCreateAccount" style="-fx-background-color: transparent;" text="Preciona aquí para crear tu cuenta" textFill="#ee4f23">
+               <font>
+                  <Font name="Berlin Sans FB" size="12.0" />
+               </font>
+            </Button>
+            <Label fx:id="lMessageErrorIdentification" layoutX="45.0" layoutY="121.0" prefHeight="17.0" prefWidth="134.0">
+               <font>
+                  <Font name="Berlin Sans FB" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label layoutX="28.0" layoutY="30.0" text="HOLA! " textFill="#f2ebeb">
+         <font>
+            <Font name="Berlin Sans FB" size="48.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="91.0" text="Operador Bienvenido al Servidor: Sistema de Emergencias 911" textFill="#f2eeee">
+         <font>
+            <Font name="Berlin Sans FB" size="13.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="158.0" fitWidth="149.0" layoutX="245.0" layoutY="137.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../Project-2-Programming-3-Client/Project%202%20Programming%203%20Client/src/img/Logo%20de%20inicio.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
