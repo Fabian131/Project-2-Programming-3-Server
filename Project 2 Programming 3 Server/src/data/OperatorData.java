@@ -4,7 +4,9 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import domain.Operator;
 
@@ -119,5 +121,28 @@ public class OperatorData {
 	    }
 	    return exists;
 	}
+	
+	 public static Map<String, Integer> getEmergenciesAttendedByOperator() {
+	        Map<String, Integer> stats = new HashMap<>();
+	        try {
+	            Connection cn = DBConnection.getConnection();
+	            String query = "{call getEmergenciesAttendedByOperator}"; // Procedimiento almacenado
+	            CallableStatement stmt = cn.prepareCall(query);
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                String operatorName = rs.getString("operator_name"); // Columna "operator_name" en la base de datos
+	                int count = rs.getInt("count"); // Columna "count" en la base de datos
+	                stats.put(operatorName, count);
+	            }
+
+	            rs.close();
+	            stmt.close();
+	            cn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return stats;
+	    }
 	
 }

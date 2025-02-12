@@ -4,7 +4,10 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+
 import domain.Emergency;
 
 
@@ -40,6 +43,29 @@ public class EmergencyData {
 		
 		return list; 
 	}
+	
+	 public static Map<String, Integer> getTotalEmergenciesByType() {
+	        Map<String, Integer> stats = new HashMap<>();
+	        try {
+	            Connection cn = DBConnection.getConnection();
+	            String query = "{call getTotalEmergenciesByType}"; // Procedimiento almacenado
+	            CallableStatement stmt = cn.prepareCall(query);
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                String type = rs.getString("type"); // Columna "type" en la base de datos
+	                int count = rs.getInt("count"); // Columna "count" en la base de datos
+	                stats.put(type, count);
+	            }
+
+	            rs.close();
+	            stmt.close();
+	            cn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return stats;
+	    }
 	
 	public static void saveEmergency(Emergency emer) {
 		
