@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="113.0" prefWidth="536.0" style="-fx-background-color: linear-gradient(to right, #FF0000, #FF8C00, #000428); -fx-background-radius: 20; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="business.GUIStartServerController">
+   <children>
+      <Label layoutX="68.0" layoutY="43.0" text="INICIAR EL SERVIDOR" textFill="#f8f0f0">
+         <font>
+            <Font name="Berlin Sans FB" size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnInitServer" layoutX="353.0" layoutY="40.0" mnemonicParsing="false" onAction="#InitServer" prefHeight="33.0" prefWidth="78.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-background-color: white;" text="INICIAR">
+         <font>
+            <Font name="Berlin Sans FB" size="14.0" />
+         </font>
+      </Button>
+      <Label fx:id="lMessageErrorIP" layoutX="30.0" layoutY="100.0" prefHeight="17.0" prefWidth="220.0" />
+      <Label fx:id="lMessageErrorPort" layoutX="325.0" layoutY="100.0" prefHeight="17.0" prefWidth="136.0" />
+   </children>
+</AnchorPane>

@@ -4,21 +4,33 @@ public class User {
 	
 	private int id; 
 	private String identification; 
-	private String surnames; 
 	private String name;
+	private String surnames; 
 	private String password; 
-	private String imagePath; //para la ruta de la imagen
+	
 	
 	public User() {}
 	
-	public User(String identification, String surnames, String name, String password, String imagePath) {
-		this.id = 0;
-		this.identification = identification; 
-		this.surnames = surnames;
+	
+
+	public User(int id, String identification, String name, String surnames, String password) {
+		super();
+		this.id = id;
+		this.identification = identification;
 		this.name = name;
-		this.password = password; 
-		this.imagePath = imagePath; 
+		this.surnames = surnames;
+		this.password = password;
 	}
+	
+	public User( String identification, String name, String surnames, String password) {
+		this.id = 0;
+		this.identification = identification;
+		this.name = name;
+		this.surnames = surnames;
+		this.password = password;
+	}
+
+
 
 	public int getId() {
 		return id;
@@ -60,13 +72,6 @@ public class User {
 		this.password = password;
 	}
 	
-	public String getImagePath() {
-		return imagePath;
-	}
-
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
-	}
 
 	@Override
 	public String toString() {

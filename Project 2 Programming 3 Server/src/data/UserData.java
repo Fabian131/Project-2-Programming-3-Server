@@ -28,7 +28,6 @@ public class UserData {
 				c.setSurnames(rs.getString(3));
 				c.setName(rs.getString(4));
 				c.setPassword(rs.getString(5));
-				c.setImagePath(rs.getString(6));
 				
 				list.add(c); 
 			
@@ -46,13 +45,12 @@ public class UserData {
 		
 		try {
 			Connection cn = DBConnection.getConnection(); 
-			String query = "{call saveClient(?,?,?,?,?)}"; //cada signo es un parametro
+			String query = "{call saveClient(?,?,?,?)}"; //cada signo es un parametro
 			CallableStatement stmt = cn.prepareCall(query); 
 			stmt.setString(1, user.getIdentification());
 			stmt.setString(2, user.getSurnames());
 			stmt.setString(3, user.getName());
 			stmt.setString(4, user.getPassword());
-			stmt.setString(5, user.getImagePath());
 			
 			stmt.executeQuery(); 
 			
@@ -61,6 +59,46 @@ public class UserData {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean validateLoginClient(String identification, String password) {
+	    boolean exists = false;
+	    try {
+	        Connection cn = DBConnection.getConnection();
+	        String query = "{call validateLoginClient(?, ?, ?)}";
+	        CallableStatement stmt = cn.prepareCall(query);
+	        stmt.setString(1, identification);
+	        stmt.setString(2, password);
+	        stmt.registerOutParameter(3, java.sql.Types.INTEGER);
+	        stmt.execute();
+	        
+	        exists = stmt.getInt(3) == 1;//1 si es valido el login, 0 si no es valido
+	        
+	        stmt.close();
+	        cn.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return exists;
+	}
+	
+	public static boolean checkIdentification(String identification) {
+	    boolean exists = false;
+	    try {
+	        Connection cn = DBConnection.getConnection();
+	        String query = "{call checkIdentificationClient(?, ?)}";
+	        CallableStatement stmt = cn.prepareCall(query);
+	        stmt.setString(1, identification);
+	        stmt.registerOutParameter(2, java.sql.Types.INTEGER);
+	        stmt.execute();
+	        exists = stmt.getInt(2) == 1;//1 si existe el la identificacion, 0 si no
+	        
+	        stmt.close();
+	        cn.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return exists;
 	}
 	
 

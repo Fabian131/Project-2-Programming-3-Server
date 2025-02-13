@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 import data.EmergencyData;
 import data.OperatorData;
+import data.UserData;
 import domain.Emergency;
 import domain.Operator;
 
@@ -71,10 +72,16 @@ public class Server {
         }
 
         private void processMessage(String message) {
-            if (message.startsWith("LOGIN:")) {
-                handleLogin(message);
-            } else if (message.startsWith("REGISTER:")) {
-                handleRegistration(message);
+            if (message.startsWith("CLIENT_LOGIN:")) {
+                handleClientLogin(message);
+            } else if (message.startsWith("OPERATOR_LOGIN:")) {
+                handleOperatorLogin(message);
+            } else if (message.startsWith("VALIDATE_ID:")) {
+                handleIdValidation(message);
+            } else if (message.startsWith("CLIENT_REGISTER:")) {
+                registerClient(message);
+            } else if (message.startsWith("OPERATOR_REGISTER:")) {
+                registerOperator(message);
             } else if (message.startsWith("EMERGENCY:")) {
                 handleEmergencyReport(message);
             } else if (message.startsWith("UPDATE_STATUS:")) {
@@ -84,12 +91,13 @@ public class Server {
             }
         }
 
-        private void handleLogin(String message) {
+        private void handleClientLogin(String message) {
             String[] parts = message.split(":");
             String identification = parts[1];
             String password = parts[2];
 
-            boolean isValidUser = OperatorData.validateLoginOperator(identification, password);
+            boolean isValidUser = UserData.validateLoginClient(identification, password);
+
             if (isValidUser) {
                 writer.println("LOGIN_RESPONSE:SUCCESS");
                 clientWriters.put(identification, writer); // Registrar el cliente conectado
@@ -98,20 +106,64 @@ public class Server {
             }
         }
 
-        private void handleRegistration(String message) {
+        private void handleOperatorLogin(String message) {
+            String[] parts = message.split(":");
+            String identification = parts[1];
+            String password = parts[2];
+
+            boolean isValidOperator = OperatorData.validateLoginOperator(identification, password);
+
+            if (isValidOperator) {
+                writer.println("LOGIN_RESPONSE:SUCCESS");
+                clientWriters.put(identification, writer); // Registrar el operador conectado
+            } else {
+                writer.println("LOGIN_RESPONSE:WRONG_PASSWORD");
+            }
+        }
+
+        private void handleIdValidation(String message) {
+            String[] parts = message.split(":");
+            String identification = parts[1];
+
+            boolean isClientExists = UserData.checkIdentification(identification);
+            boolean isOperatorExists = OperatorData.checkIdentification(identification);
+
+            if (isClientExists || isOperatorExists) {
+                writer.println("ID_VALIDATION:EXISTS");
+            } else {
+                writer.println("ID_VALIDATION:NOT_EXISTS");
+            }
+        }
+
+        private void registerClient(String message) {
             String[] parts = message.split(":");
             String identification = parts[1];
             String surnames = parts[2];
             String name = parts[3];
             String password = parts[4];
-            String imagePath = parts[5];
 
-            if (!OperatorData.checkIdentification(identification)) {
-                Operator operator = new Operator(identification, name, surnames, password);
-                OperatorData.saveOperator(operator);
-                writer.println("REGISTRATION_RESPONSE:SUCCESS");
+            if (!UserData.checkIdentification(identification)) { // Verificar si el cliente ya existe
+                domain.User user = new domain.User(identification, name, surnames, password);
+                UserData.saveUser(user); // Guardar el cliente en la base de datos
+                writer.println("REGISTRATION_RESPONSE:SUCCESS"); // Respuesta exitosa
             } else {
-                writer.println("REGISTRATION_RESPONSE:ID_EXISTS");
+                writer.println("REGISTRATION_RESPONSE:ID_EXISTS"); // Identificación ya registrada
+            }
+        }
+
+        private void registerOperator(String message) {
+            String[] parts = message.split(":");
+            String identification = parts[1];
+            String surnames = parts[2];
+            String name = parts[3];
+            String password = parts[4];
+
+            if (!OperatorData.checkIdentification(identification)) { // Verificar si el operador ya existe
+                Operator operator = new Operator(identification, name, surnames, password);
+                OperatorData.saveOperator(operator); // Guardar el operador en la base de datos
+                writer.println("REGISTRATION_RESPONSE:SUCCESS"); // Respuesta exitosa
+            } else {
+                writer.println("REGISTRATION_RESPONSE:ID_EXISTS"); // Identificación ya registrada
             }
         }
 
@@ -206,10 +258,5 @@ public class Server {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.startServer();
     }
 }

@@ -1,10 +1,5 @@
 package business;
 
-import java.sql.Connection;
-
-import data.DBConnection;
-import data.OperatorData;
-import domain.Operator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +11,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			Parent root = FXMLLoader.load(getClass().getResource("/presentation/GUILoginOperators.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/presentation/GUIStartServer.fxml"));
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);

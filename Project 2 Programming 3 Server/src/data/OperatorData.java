@@ -57,7 +57,6 @@ public class OperatorData {
 			Connection cn = DBConnection.getConnection(); 
 			String query = "{call saveOperator(?,?,?,?,?,?)}"; //cada signo es un parametro
 			CallableStatement stmt = cn.prepareCall(query);
-			stmt.setInt(0, opera.getIdDB());
 			stmt.setString(1, opera.getIdentification());
 			stmt.setString(2, opera.getName());
 			stmt.setString(3, opera.getSurnames());
