@@ -11,18 +11,18 @@ import java.util.Map;
 import domain.Operator;
 
 public class OperatorData {
-	
+
 
 	public static LinkedList<Operator> getAll(){
-		
+
 		LinkedList<Operator> list = new LinkedList<Operator>(); 
-		
+
 		try {
 			Connection cn = DBConnection.getConnection(); 
 			String query = "{call getAllOperator}"; 
 			CallableStatement stmt = cn.prepareCall(query); 
 			ResultSet rs = stmt.executeQuery(); 
-			
+
 			while(rs.next()) {
 				Operator o = new Operator(); 
 				o.setIdDB(rs.getInt(1));
@@ -33,7 +33,7 @@ public class OperatorData {
 				o.setNumberOfEmergenciesAttended(rs.getInt(6));
 				o.setAvailable(isSelected(rs.getInt(7)));
 				list.add(o); 
-			
+
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -41,7 +41,7 @@ public class OperatorData {
 		}
 		return list; 
 	}
-	
+
 	public static boolean isSelected(int value) {
 		if (value==0) {
 			return false;
@@ -51,7 +51,7 @@ public class OperatorData {
 			return false;
 		}
 	}
-	
+
 	public static void saveOperator(Operator opera) {
 		try {
 			Connection cn = DBConnection.getConnection(); 
@@ -69,7 +69,7 @@ public class OperatorData {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static int valueSelected(boolean info) {
 		if (info == true) {
 			return 1;
@@ -79,69 +79,92 @@ public class OperatorData {
 			return 0;
 		}
 	}
-	
+
 	public static boolean validateLoginOperator(String identification, String password) {
-	    boolean exists = false;
-	    try {
-	        Connection cn = DBConnection.getConnection();
-	        String query = "{call validateLoginOperator(?, ?, ?)}";
-	        CallableStatement stmt = cn.prepareCall(query);
-	        stmt.setString(1, identification);
-	        stmt.setString(2, password);
-	        stmt.registerOutParameter(3, java.sql.Types.INTEGER);
-	        stmt.execute();
-	        
-	        exists = stmt.getInt(3) == 1;//1 si es valido el login, 0 si no es valido
-	        
-	        stmt.close();
-	        cn.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return exists;
+		boolean exists = false;
+		try {
+			Connection cn = DBConnection.getConnection();
+			String query = "{call validateLoginOperator(?, ?, ?)}";
+			CallableStatement stmt = cn.prepareCall(query);
+			stmt.setString(1, identification);
+			stmt.setString(2, password);
+			stmt.registerOutParameter(3, java.sql.Types.INTEGER);
+			stmt.execute();
+
+			exists = stmt.getInt(3) == 1;//1 si es valido el login, 0 si no es valido
+
+			stmt.close();
+			cn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return exists;
 	}
-	
+
 	public static boolean checkIdentification(String identification) {
-	    boolean exists = false;
-	    try {
-	        Connection cn = DBConnection.getConnection();
-	        String query = "{call checkIdentificationOperator(?, ?)}";
-	        CallableStatement stmt = cn.prepareCall(query);
-	        stmt.setString(1, identification);
-	        stmt.registerOutParameter(2, java.sql.Types.INTEGER);
-	        stmt.execute();
-	        
-	        exists = stmt.getInt(2) == 1;//1 si existe el la identificacion, 0 si no
-	        
-	        stmt.close();
-	        cn.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return exists;
+		boolean exists = false;
+		try {
+			Connection cn = DBConnection.getConnection();
+			String query = "{call checkIdentificationOperator(?, ?)}";
+			CallableStatement stmt = cn.prepareCall(query);
+			stmt.setString(1, identification);
+			stmt.registerOutParameter(2, java.sql.Types.INTEGER);
+			stmt.execute();
+
+			exists = stmt.getInt(2) == 1;//1 si existe el la identificacion, 0 si no
+
+			stmt.close();
+			cn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return exists;
 	}
-	
-	 public static Map<String, Integer> getEmergenciesAttendedByOperator() {
-	        Map<String, Integer> stats = new HashMap<>();
-	        try {
-	            Connection cn = DBConnection.getConnection();
-	            String query = "{call getEmergenciesAttendedByOperator}"; // Procedimiento almacenado
-	            CallableStatement stmt = cn.prepareCall(query);
-	            ResultSet rs = stmt.executeQuery();
 
-	            while (rs.next()) {
-	                String operatorName = rs.getString("operator_name"); // Columna "operator_name" en la base de datos
-	                int count = rs.getInt("count"); // Columna "count" en la base de datos
-	                stats.put(operatorName, count);
-	            }
+	public static Map<String, Integer> getEmergenciesAttendedByOperator() {
+		Map<String, Integer> stats = new HashMap<>();
+		try {
+			Connection cn = DBConnection.getConnection();
+			String query = "{call getEmergenciesAttendedByOperator}"; // Procedimiento almacenado
+			CallableStatement stmt = cn.prepareCall(query);
+			ResultSet rs = stmt.executeQuery();
 
-	            rs.close();
-	            stmt.close();
-	            cn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return stats;
-	    }
-	
+			while (rs.next()) {
+				String operatorName = rs.getString("operator_name"); // Columna "operator_name" en la base de datos
+				int count = rs.getInt("count"); // Columna "count" en la base de datos
+				stats.put(operatorName, count);
+			}
+
+			rs.close();
+			stmt.close();
+			cn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return stats;
+	}
+
+	public static boolean isOperator(String identification) {
+		try {
+			Connection cn = DBConnection.getConnection();
+			String query = "{call checkOperator(?)}";
+			CallableStatement stmt = cn.prepareCall(query);
+			stmt.setString(1, identification);
+
+			ResultSet rs = stmt.executeQuery();
+			boolean exists = rs.next(); // Si hay resultado, es un operador
+
+			rs.close();
+			stmt.close();
+			cn.close();
+
+			return exists;
+
+		} catch (SQLException e) {
+			System.err.println("Error verificando operador: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }

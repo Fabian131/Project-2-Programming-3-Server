@@ -10,82 +10,107 @@ import java.util.Map;
 
 import domain.Emergency;
 
-
 public class EmergencyData {
-	
 
-	public static LinkedList<Emergency> getAll(){
-		
-		LinkedList<Emergency> list = new LinkedList<Emergency>(); 
-		
-		try {
-			Connection cn = DBConnection.getConnection(); 
-			String query = "{call getAllEmergency}"; 
-			CallableStatement stmt = cn.prepareCall(query); 
-			ResultSet rs = stmt.executeQuery(); 
-			
-			while(rs.next()) {
-				Emergency c = new Emergency(); 
-				c.setId(rs.getInt(1));
-				c.setIdUser(rs.getString(2));
-				c.setTypeEmergency(rs.getString(3));
-				c.setUbication(rs.getString(4));
-				c.setDescription(rs.getString(5));
-				
-				list.add(c); 
-			
-			}
-			
-		}catch(SQLException e) {
-			
-		}
-		
-		
-		return list; 
-	}
-	
-	 public static Map<String, Integer> getTotalEmergenciesByType() {
-	        Map<String, Integer> stats = new HashMap<>();
-	        try {
-	            Connection cn = DBConnection.getConnection();
-	            String query = "{call getTotalEmergenciesByType}"; // Procedimiento almacenado
-	            CallableStatement stmt = cn.prepareCall(query);
-	            ResultSet rs = stmt.executeQuery();
+    // Método para obtener todas las emergencias
+    public static LinkedList<Emergency> getAll() {
+        LinkedList<Emergency> list = new LinkedList<>();
 
-	            while (rs.next()) {
-	                String type = rs.getString("type"); // Columna "type" en la base de datos
-	                int count = rs.getInt("count"); // Columna "count" en la base de datos
-	                stats.put(type, count);
-	            }
+        try {
+            Connection cn = DBConnection.getConnection();
+            String query = "{call getAllEmergency}";
+            CallableStatement stmt = cn.prepareCall(query);
+            ResultSet rs = stmt.executeQuery();
 
-	            rs.close();
-	            stmt.close();
-	            cn.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	        return stats;
-	    }
-	
-	public static void saveEmergency(Emergency emer) {
-		
-		try {
-			Connection cn = DBConnection.getConnection(); 
-			String query = "{call saveEmergency(?,?,?,?)}"; //cada signo es un parametro
-			CallableStatement stmt = cn.prepareCall(query); 
-			stmt.setString(1, emer.getIdUser());
-			stmt.setString(2, emer.getTypeEmergency());
-			stmt.setString(3, emer.getUbication());
-			stmt.setString(4, emer.getDescription());
-			
-			stmt.executeQuery(); 
-			
-			System.out.println("guardado correctamente");
+            while (rs.next()) {
+                Emergency emergency = new Emergency();
+                emergency.setId(rs.getInt(1));
+                emergency.setUserId(rs.getString(2));
+                emergency.setType(rs.getString(3));
+                emergency.setLocation(rs.getString(4));
+                emergency.setDescription(rs.getString(5));
+                emergency.setStatus(rs.getString(6));
+                emergency.setOperatorId(rs.getString(7));
 
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+                list.add(emergency);
+            }
 
+            rs.close();
+            stmt.close();
+            cn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // Método para obtener estadísticas de emergencias por tipo
+    public static Map<String, Integer> getTotalEmergenciesByType() {
+        Map<String, Integer> stats = new HashMap<>();
+        try {
+            Connection cn = DBConnection.getConnection();
+            String query = "{call getTotalEmergenciesByType}";
+            CallableStatement stmt = cn.prepareCall(query);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String type = rs.getString("type");
+                int count = rs.getInt("count");
+                stats.put(type, count);
+            }
+
+            rs.close();
+            stmt.close();
+            cn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stats;
+    }
+
+    // Método para guardar una nueva emergencia
+    public static void saveEmergency(Emergency emergency) {
+        try {
+            Connection cn = DBConnection.getConnection();
+            String query = "{call saveEmergency(?,?,?,?,?,?)}";
+            CallableStatement stmt = cn.prepareCall(query);
+            stmt.setString(1, emergency.getUserId());
+            stmt.setString(2, emergency.getType());
+            stmt.setString(3, emergency.getLocation());
+            stmt.setString(4, emergency.getDescription());
+            stmt.setString(5, emergency.getStatus());
+            stmt.setString(6, emergency.getOperatorId());
+
+            stmt.execute();
+
+            System.out.println("Emergencia guardada correctamente");
+
+            stmt.close();
+            cn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para actualizar el estado de una emergencia
+    public static void updateEmergency(Emergency emergency) {
+        try {
+            Connection cn = DBConnection.getConnection();
+            String query = "{call updateEmergency(?,?,?)}";
+            CallableStatement stmt = cn.prepareCall(query);
+            stmt.setString(1, emergency.getUserId());
+            stmt.setString(2, emergency.getStatus());
+            stmt.setString(3, emergency.getOperatorId());
+
+            stmt.execute();
+
+            System.out.println("Estado de la emergencia actualizado correctamente");
+
+            stmt.close();
+            cn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

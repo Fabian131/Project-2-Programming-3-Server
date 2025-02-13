@@ -1,53 +1,95 @@
 package domain;
 
 public class Emergency {
-	
-	private int id; 
-	private String idUser; //usuario que reporte la emergencia
-	private String typeEmergency; 
-	private String ubication; 
+
+	private int id;
+	private String userId;
+	private String type;
+	private String location;
 	private String description;
-	
+	private String status;
+	private long startTime;
+	private String operatorId;
+
 	public Emergency() {}
-	
-	public Emergency(String idUser, String typeEmergency, String ubication, String description) {
-		this.id = 0; 
-		this.idUser = idUser;
-		this.typeEmergency = typeEmergency;
-		this.ubication = ubication;
+
+	public Emergency(String userId, String type, String location, String description) {
+		this.id = 0;
+		this.userId = userId;
+		this.type = type;
+		this.location = location;
 		this.description = description;
+		this.status = "Pendiente"; // Estado inicial
+		this.startTime = System.currentTimeMillis();
+		this.operatorId = null;
 	}
+
+
+	public Emergency(int id,String userId, String type, String location, String description, String state) {
+		this.id = id;
+		this.userId = userId;
+		this.type = type;
+		this.location = location;
+		this.description = description;
+		this.status = state;
+		this.startTime = System.currentTimeMillis();
+		this.operatorId = null;
+	}
+
+	public String getColor() {
+		long duration = System.currentTimeMillis() - startTime;
+		long secondsElapsed = duration / 1000;
+
+		switch(status) {
+		case "Pendiente":
+			if (secondsElapsed > 300) return "Rojo"; // +5 minutos
+			if (secondsElapsed > 180) return "Amarillo"; // +3 minutos
+			return "Verde";
+
+		case "En proceso":
+			if (secondsElapsed > 300) return "Rojo";
+			if (secondsElapsed > 180) return "Amarillo";
+			return "Celeste";
+
+		case "Resuelta":
+			return "Verde";
+
+		default:
+			return "Verde";
+		}
+	}
+
 
 	public int getId() {
-		return id; 
+		return id;
 	}
-	
+
 	public void setId(int id) {
-		this.id = id; 
-	}
-	
-	public String getIdUser() {
-		return idUser;
+		this.id = id;
 	}
 
-	public void setIdUser(String idUser) {
-		this.idUser = idUser;
+	public String getUserId() {
+		return userId;
 	}
 
-	public String getTypeEmergency() {
-		return typeEmergency;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public void setTypeEmergency(String typeEmergency) {
-		this.typeEmergency = typeEmergency;
+	public String getType() {
+		return type;
 	}
 
-	public String getUbication() {
-		return ubication;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public void setUbication(String ubication) {
-		this.ubication = ubication;
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public String getDescription() {
@@ -58,10 +100,30 @@ public class Emergency {
 		this.description = description;
 	}
 
-	@Override
-	public String toString() {
-		return idUser + typeEmergency + ubication
-				+ description;
-	} 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(String operatorId) {
+		this.operatorId = operatorId;
+	}
+
+
 
 }

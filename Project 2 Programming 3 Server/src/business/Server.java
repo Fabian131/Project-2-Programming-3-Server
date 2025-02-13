@@ -1,6 +1,9 @@
 package business;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -168,7 +171,7 @@ public class Server {
         }
 
         private void handleEmergencyReport(String message) {
-            String[] parts = message.split(":");
+        	String[] parts = message.split(":");
             String userId = parts[1];
             String type = parts[2];
             String location = parts[3];
@@ -177,15 +180,34 @@ public class Server {
             Emergency emergency = new Emergency(userId, type, location, description);
             EmergencyData.saveEmergency(emergency);
 
-            // Buscar un operador disponible
+            // Buscar operador disponible
             Operator availableOperator = findAvailableOperator();
             if (availableOperator != null) {
-                availableOperator.setAvailable(false); // Marcar como ocupado
-                broadcastToOperators("ASSIGNED_EMERGENCY:" + availableOperator.getIdentification() + ":" + type + ":" + location + ":" + description);
-            } else {
-                broadcastToOperators("UNASSIGNED_EMERGENCY:" + type + ":" + location + ":" + description);
+                emergency.setOperatorId(availableOperator.getIdentification());
+                availableOperator.setAvailable(false);
+                emergency.setStatus("En proceso");
+                EmergencyData.updateEmergency(emergency);
+            }
+
+            // Notificar a cliente y operadores
+            notifyEmergencyUpdate(emergency);
+
+        }
+        
+        private void notifyEmergencyUpdate(Emergency emergency) {
+        	// Notificar al cliente que reportó la emergencia
+            PrintWriter clientWriter = clientWriters.get(emergency.getUserId());
+            if (clientWriter != null) {
+                String clientUpdate = String.format("USER_EMERGENCY_UPDATE:%s:%s:%s",
+                        emergency.getType(),
+                        emergency.getStatus(),
+                        emergency.getColor()
+                );
+                clientWriter.println(clientUpdate);
             }
         }
+
+
 
         private Operator findAvailableOperator() {
             for (Operator operator : OperatorData.getAll()) {
@@ -204,15 +226,15 @@ public class Server {
 
             String color = "Verde"; // Por defecto
             if (newStatus.equals("Pendiente")) {
-                if (duration > 5 * 60 * 1000) { // Más de 5 minutos
+                if (duration > 5 * 1000) { // Más de 5 minutos
                     color = "Rojo";
-                } else if (duration > 3 * 60 * 1000) { // Más de 3 minutos
+                } else if (duration > 3 * 1000) { // Más de 3 minutos
                     color = "Amarillo";
                 }
             } else if (newStatus.equals("En Proceso")) {
                 if (duration > 5 * 60 * 1000) { // Más de 5 minutos
                     color = "Rojo";
-                } else if (duration > 3 * 60 * 1000) { // Más de 3 minutos
+                } else if (duration > 3 *1000) { // Más de 3 minutos
                     color = "Amarillo";
                 } else {
                     color = "Celeste";
