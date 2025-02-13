@@ -15,7 +15,7 @@ public class EmergencyData {
 		
 		LinkedList<Emergency> list = new LinkedList<Emergency>(); 
 		
-		try {
+		try {   
 			Connection cn = DBConnection.getConnection(); 
 			String query = "{call getAllEmergency}"; 
 			CallableStatement stmt = cn.prepareCall(query); 
